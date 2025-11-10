@@ -1,0 +1,101 @@
+#include <catch2/catch_test_macros.hpp>
+#include "common/Image/Image.hpp"
+#include "common/Image/AveragingImageScaler.hpp"
+
+void InitImage(Image &img, size_t width, size_t height, size_t nocc){
+    img.width = width;
+    img.height = height;
+    img.numberOfColorChannels = nocc;
+    unsigned char *data = new unsigned char[width * height * nocc];
+    REQUIRE(data != nullptr);
+    img.data = data;
+
+    for(size_t y = 0; y < height; ++y){
+        for(size_t x = 0; x < width; ++x){
+            for(size_t c = 0; c < nocc; ++c){
+                data[(x + y * width) * nocc + c] = nocc + 1;
+            }
+        }
+    }
+}
+
+bool TestImage(const Image &img){
+    for(size_t y = 0; y < img.height; ++y){
+        for(size_t x = 0; x < img.width; ++x){
+            for(size_t c = 0; c < img.numberOfColorChannels; ++c){
+                if(!img.data[(x + y * img.width) * img.numberOfColorChannels] == img.numberOfColorChannels + 1)return false;
+            }
+        }
+    }
+    return true;
+}
+
+TEST_CASE("ImageScaler default test", "[imageScaler]") {
+    Image img;
+    size_t width = 100;
+    size_t height = 100;
+    size_t nocc = 4;
+
+    // init the image
+    InitImage(img, width, height, nocc);
+
+    // get scaler
+    AveragingScaler scaler;
+
+    SECTION( "scaling to 1/2 uniformly" ){
+        auto scaledImg = scaler.ScaleImageTo(img, width/2, height/2);
+        REQUIRE(scaledImg.width == width/2);
+        REQUIRE(scaledImg.height == height/2);
+        REQUIRE(scaledImg.numberOfColorChannels == nocc);
+        REQUIRE(TestImage(scaledImg));
+    }
+
+    SECTION( "scaling to 1/4 uniformly" ){
+        auto scaledImg = scaler.ScaleImageTo(img, width/4, height/4);
+        REQUIRE(scaledImg.width == width/4);
+        REQUIRE(scaledImg.height == height/4);
+        REQUIRE(scaledImg.numberOfColorChannels == nocc);
+        REQUIRE(TestImage(scaledImg));
+    }
+
+    SECTION( "scaling to 1/8 uniformly" ){
+        auto scaledImg = scaler.ScaleImageTo(img, width/8, height/8);
+        REQUIRE(scaledImg.width == width/8);
+        REQUIRE(scaledImg.height == height/8);
+        REQUIRE(scaledImg.numberOfColorChannels == nocc);
+        REQUIRE(TestImage(scaledImg));
+    }
+
+    SECTION( "scaling to 1/2 width" ){
+        auto scaledImg = scaler.ScaleImageTo(img, width/2, height);
+        REQUIRE(scaledImg.width == width/2);
+        REQUIRE(scaledImg.height == height);
+        REQUIRE(scaledImg.numberOfColorChannels == nocc);
+        REQUIRE(TestImage(scaledImg));
+    }
+
+    SECTION( "scaling to 1/2 height" ){
+        auto scaledImg = scaler.ScaleImageTo(img, width, height/2);
+        REQUIRE(scaledImg.width == width);
+        REQUIRE(scaledImg.height == height/2);
+        REQUIRE(scaledImg.numberOfColorChannels == nocc);
+        REQUIRE(TestImage(scaledImg));
+    }
+
+    SECTION( "scaling to 1/4 width 1/2 height" ){
+        auto scaledImg = scaler.ScaleImageTo(img, width/4, height/2);
+        REQUIRE(scaledImg.width == width/4);
+        REQUIRE(scaledImg.height == height/2);
+        REQUIRE(scaledImg.numberOfColorChannels == nocc);
+        REQUIRE(TestImage(scaledImg));
+    }
+
+    SECTION( "scaling to 1/2 width 1/4 height" ){
+        auto scaledImg = scaler.ScaleImageTo(img, width/2, height/4);
+        REQUIRE(scaledImg.width == width/2);
+        REQUIRE(scaledImg.height == height/4);
+        REQUIRE(scaledImg.numberOfColorChannels == nocc);
+        REQUIRE(TestImage(scaledImg));
+    }
+
+}
