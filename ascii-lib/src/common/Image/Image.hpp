@@ -1,17 +1,18 @@
 #pragma once
 
 #include <string>
+#include <cstddef>
 
 class Image{
     public:
     /// @brief 
     unsigned char *data;
     /// @brief 
-    int width;
+    std::size_t width;
     /// @brief 
-    int height;
+    std::size_t height;
     /// @brief 
-    int numberOfColorChannels;
+    std::size_t numberOfColorChannels;
 
     Image();
     Image(std::string path);
@@ -22,6 +23,60 @@ class Image{
 
     /// @brief Grayscales an image by averaging rgba channels
     /// @param image Image to grayscale
-    void ToGreyScale();
+    Image ToGrayScale() const;
+
+    // Move Semantics Functions
+
+    // Copy Constructor (deep copy)
+    Image(const Image& other)
+    : width(other.width), height(other.height), numberOfColorChannels(other.numberOfColorChannels)
+    {
+        if (other.data){
+            std::size_t size = width * height * numberOfColorChannels;
+            data = new unsigned char[size];
+            std::copy(other.data, other.data + size, data); // copy data
+        }
+    }
+
+    // Copy Assignment (deep copy)
+    Image& operator=(const Image& other){
+        if(this != &other){
+            delete[] data;
+            width = other.width;
+            height = other.height;
+            numberOfColorChannels = other.numberOfColorChannels;
+            if(other.data){
+                std::size_t size = width * height * numberOfColorChannels;
+                data = new unsigned char[size];
+                std::copy(other.data, other.data + size, data);
+            } else {
+                data = nullptr;
+            }
+        }
+        return *this;
+    }
+
+    // Move Constructor
+    Image(Image&& other) noexcept
+        : width(other.width), height(other.height), numberOfColorChannels(other.numberOfColorChannels), data(other.data)
+    {
+        other.data = nullptr;
+        other.width = other.height = other.numberOfColorChannels = 0;
+    }
+
+    // Move assignment
+    Image& operator=(Image&& other) noexcept {
+        if(this != &other){
+            delete[] data;
+            width = other.width;
+            height = other.height;
+            numberOfColorChannels = other.numberOfColorChannels;
+            data = other.data;
+
+            other.data = nullptr;
+            other.width = other.height = other.numberOfColorChannels = 0;
+        }
+        return *this;
+    }
 
 };

@@ -1,5 +1,5 @@
-#include "common/Image/AveragingImageScaler.hpp"
-#include "Image.hpp"
+#include "AveragingImageScaler.hpp"
+#include "../Image.hpp"
 
 Image AveragingScaler::ScaleImageTo(const Image &image, int newWidth, int newHeight){
     // allocate big enough memory
@@ -24,18 +24,18 @@ Image AveragingScaler::ScaleImageTo(const Image &image, int newWidth, int newHei
             int sum[4] = {0};
 
             // average over old pixels
-            for(int j = 0; j < dy; ++j){
-                for(int i = 0; i < dx; ++i){
+            int samples = 0;
+            for(int j = 0; j < dy && (y * dy + j) < image.height; ++j){
+                for(int i = 0; i < dx && (x * dx + i) < image.width; ++i){
                     const unsigned char *p = getPixel(x * dx + i,y * dy + j);
                     for(int c = 0; c < image.numberOfColorChannels; ++c){
                         sum[c] += p[c];
                     }
+                    samples++;
                 }
-
-                int samples = dx * dy;
-                for(int c = 0; c < image.numberOfColorChannels; ++c){
-                    scaledData[(y * newWidth + x) * image.numberOfColorChannels + c] = static_cast<unsigned char>(sum[c] / samples);
-                }
+            }
+            for(int c = 0; c < image.numberOfColorChannels; ++c){
+                scaledData[(y * newWidth + x) * image.numberOfColorChannels + c] = static_cast<unsigned char>(sum[c] / samples);
             }
         }
     }
