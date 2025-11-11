@@ -22,6 +22,23 @@ target_include_directories(ascii-tests
         ${CMAKE_SOURCE_DIR}/ascii-lib/src
 )
 
+# Collect all image files inside tests/test-images
+file(GLOB TEST_IMAGES "${CMAKE_CURRENT_SOURCE_DIR}/test-images/*")
+
+# Define the output directory in the build tree
+set(TEST_IMAGE_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/test-images")
+file(MAKE_DIRECTORY "${TEST_IMAGE_OUTPUT_DIR}")
+
+add_custom_target(copy_test_images ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_CURRENT_SOURCE_DIR}/test-images"
+            "${CMAKE_CURRENT_BINARY_DIR}/test-images"
+    COMMENT "Copying test images to build directory"
+)
+
+# Provide a preprocessor macro with the test image path
+add_compile_definitions(TEST_IMAGE_DIR="${TEST_IMAGE_OUTPUT_DIR}")
+
 # Discover and register Catch2 tests with CTest
 include(Catch)
 catch_discover_tests(ascii-tests)

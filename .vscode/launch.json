@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Catch2 Tests (CMake Tools / Ninja)",
+      "type": "cppdbg",
+      "request": "launch",
+
+      // Automatically uses the active CMake target path
+      "program": "${command:cmake.launchTargetPath}",
+
+      // Run all tests by default (can override below)
+      "args": ["--reporter", "console", "--success", "--durations", "yes"],
+
+      "stopAtEntry": false,
+      "cwd": "${command:cmake.launchTargetDirectory}",
+      "environment": [],
+      "externalConsole": true,
+
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
