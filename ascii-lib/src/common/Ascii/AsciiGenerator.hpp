@@ -1,16 +1,30 @@
 #pragma once
 
-#include "../Image/Image.hpp"
-#include "../Image/Scaling/AveragingImageScaler.hpp"
+#include "common/Image/Image.hpp"
+#include "common/Image/Scaling/AveragingImageScaler.hpp"
+#include "common/Image/Color.hpp"
 
 #include <string>
+
+enum ColorMode{
+    DEFAULT_COLOR,
+    BLACK_WHITE,
+    ANSII8,
+    ANSII16,
+    ANSII256,
+    ANSIIRGB
+};
+
+enum EdgeDetectionMode{
+    NO_EDGE,
+    SOBOL
+};
 
 struct GeneratorContext{
     std::size_t width;
     std::size_t height;
-    bool useColor;
-    bool useEdgeDetection;
-    bool forceDefaultColor;
+    ColorMode colorMode;
+    EdgeDetectionMode detectionMode;
 };
 
 class AsciiGenerator{

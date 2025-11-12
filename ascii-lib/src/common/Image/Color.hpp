@@ -8,6 +8,13 @@
 
 namespace ColorConverter{
 
+    enum ColorType{
+        G,      // Gray
+        RGB,    // normal Red, Green, Blue
+        RGBA,   // RGB with Alpha (transparency)
+        HSV     // Hue Value Saturation
+    };
+
     struct Color {unsigned char r, g, b; };
 
     // 16 standard ANSI colors (0–7 = normal, 8–15 = bright)

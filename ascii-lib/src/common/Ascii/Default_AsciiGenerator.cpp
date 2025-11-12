@@ -31,10 +31,11 @@ std::string DefaultAsciiGenerator::GenerateAscii(Image &image, GeneratorContext 
 
     // set ascii pixel set to use
 
+    ColorMode mode = context.colorMode;
     
     // build string
     for(std::size_t y = 0; y < height; ++y){
-        if(context.forceDefaultColor)asciiString += "\e[97;40m";
+        if(mode != ColorMode::DEFAULT_COLOR)asciiString += "\e[97;40m";
         for(std::size_t x = 0; x < width; ++x){
             // check for edge
 
@@ -43,7 +44,7 @@ std::string DefaultAsciiGenerator::GenerateAscii(Image &image, GeneratorContext 
             index = std::clamp(index, std::size_t(0), pixelArraySize - 1);
             asciiString += defaultPixels[index];
         }
-        if(context.forceDefaultColor) asciiString += "\e[0m";
+        if(mode != ColorMode::DEFAULT_COLOR) asciiString += "\e[0m";
         asciiString += "\n";
     }
     return asciiString;

@@ -19,9 +19,8 @@ TEST_CASE("DefaultAsciiGenerator KingFisher", "[DefaultAsciiGenerator]") {
     GeneratorContext context = {
         .width = 200,
         .height = 200/3,
-        .useColor = false,
-        .useEdgeDetection = false,
-        .forceDefaultColor = true
+        .colorMode = ColorMode::BLACK_WHITE,
+        .detectionMode = EdgeDetectionMode::NO_EDGE
     };
     
     std::cout << "TEST:: Generating Ascii" << std::endl;
@@ -51,9 +50,8 @@ TEST_CASE("DefaultAsciiGenerator Donut 1", "[DefaultAsciiGenerator]") {
     GeneratorContext context = {
         .width = 200,
         .height = 200/3,
-        .useColor = false,
-        .useEdgeDetection = false,
-        .forceDefaultColor = true
+        .colorMode = ColorMode::BLACK_WHITE,
+        .detectionMode = EdgeDetectionMode::NO_EDGE
     };
     
     std::cout << "TEST:: Generating Ascii" << std::endl;
@@ -83,9 +81,8 @@ TEST_CASE("DefaultAsciiGenerator Donut 2", "[DefaultAsciiGenerator]") {
     GeneratorContext context = {
         .width = 200,
         .height = 200/3,
-        .useColor = false,
-        .useEdgeDetection = false,
-        .forceDefaultColor = true
+        .colorMode = ColorMode::BLACK_WHITE,
+        .detectionMode = EdgeDetectionMode::NO_EDGE
     };
     
     std::cout << "TEST:: Generating Ascii" << std::endl;
