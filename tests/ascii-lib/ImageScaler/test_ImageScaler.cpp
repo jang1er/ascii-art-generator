@@ -1,6 +1,9 @@
 #include <catch2/catch_test_macros.hpp>
 #include "common/Image/Image.hpp"
 #include "common/Image/Scaling/AveragingImageScaler.hpp"
+#include "vendor/stb-image/stb_image_write.h"
+
+#include <iostream>
 
 void InitImage(Image &img, size_t width, size_t height, size_t nocc){
     img.width = width;
@@ -189,4 +192,24 @@ TEST_CASE("ImageScaler non-uniform test", "[imageScaler]") {
         REQUIRE(TestImage(scaledImg));
     }
 
+}
+
+TEST_CASE("Scaling image donut 1", "[imageScaler]"){
+    Image img("test-images/image-donut.png");
+
+    REQUIRE(img.data);
+
+    AveragingScaler scaler;
+
+    // grayscale image
+    Image scaled = scaler.ScaleImageTo(img, 300, 300);
+
+    // check metrics
+    REQUIRE(scaled.data);
+    REQUIRE(scaled.data != img.data);
+
+    // write to file
+    if(!stbi_write_png("test-images/output-donut-scaled.png", scaled.width, scaled.height, scaled.numberOfColorChannels, scaled.data, scaled.width * scaled.numberOfColorChannels)){
+        std::cout << "TEST:: Failed to write image to file" << std::endl;
+    }
 }
