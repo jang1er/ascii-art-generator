@@ -5,6 +5,6 @@
 
 class AveragingScaler : public ImageScaler {
 public:
-    Image ScaleImageTo(const Image &image, int newWidth, int newHeight) override;
+    Image ScaleImageTo(const Image &image, std::size_t newWidth, std::size_t newHeight) override;
     Image ScaleImageTo(const Image &image, float scale) override;
 };

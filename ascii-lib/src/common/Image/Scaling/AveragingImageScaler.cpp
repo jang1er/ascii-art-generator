@@ -1,7 +1,8 @@
 #include "AveragingImageScaler.hpp"
 #include "../Image.hpp"
+#include <cmath>
 
-Image AveragingScaler::ScaleImageTo(const Image &image, int newWidth, int newHeight){
+Image AveragingScaler::ScaleImageTo(const Image &image, std::size_t newWidth, std::size_t newHeight){
     // allocate big enough memory
     unsigned char *scaledData = new unsigned char[newWidth * newHeight * image.numberOfColorChannels];
 
@@ -11,31 +12,42 @@ Image AveragingScaler::ScaleImageTo(const Image &image, int newWidth, int newHei
     scaledImage.numberOfColorChannels = image.numberOfColorChannels;
     scaledImage.data = scaledData;
 
-    // get ratio of old to new pixels
-    int dx = image.width / newWidth;
-    int dy = image.height / newHeight;
-
-    auto getPixel = [&](int x, int y){
+    auto getPixel = [&](std::size_t x, std::size_t y) {
         return image.data + (x + y * image.width) * image.numberOfColorChannels;
     };
-
-    for(int y = 0; y < newHeight; ++y){
-        for(int x = 0; x < newWidth; ++x){
-            int sum[4] = {0};
-
-            // average over old pixels
+    
+    // use floating-point ratios
+    float dx = static_cast<float>(image.width) / static_cast<float>(newWidth);
+    float dy = static_cast<float>(image.height) / static_cast<float>(newHeight);
+    
+    for (std::size_t y = 0; y < newHeight; ++y) {
+        for (std::size_t x = 0; x < newWidth; ++x) {
+            float srcX0 = static_cast<float>(x) * dx;
+            float srcX1 = static_cast<float>(x + 1) * dx;
+            float srcY0 = static_cast<float>(y) * dy;
+            float srcY1 = static_cast<float>(y + 1) * dy;
+        
+            std::size_t x0 = static_cast<std::size_t>(srcX0);
+            std::size_t x1 = static_cast<std::size_t>(std::ceil(srcX1));
+            std::size_t y0 = static_cast<std::size_t>(srcY0);
+            std::size_t y1 = static_cast<std::size_t>(std::ceil(srcY1));
+        
+            double sum[4] = {0.0};
             int samples = 0;
-            for(int j = 0; j < dy && (y * dy + j) < image.height; ++j){
-                for(int i = 0; i < dx && (x * dx + i) < image.width; ++i){
-                    const unsigned char *p = getPixel(x * dx + i,y * dy + j);
-                    for(int c = 0; c < image.numberOfColorChannels; ++c){
+        
+            for (std::size_t sy = y0; sy < y1 && sy < image.height; ++sy) {
+                for (std::size_t sx = x0; sx < x1 && sx < image.width; ++sx) {
+                    const unsigned char* p = getPixel(sx, sy);
+                    for (std::size_t c = 0; c < image.numberOfColorChannels; ++c) {
                         sum[c] += p[c];
                     }
                     samples++;
                 }
             }
-            for(int c = 0; c < image.numberOfColorChannels; ++c){
-                scaledData[(y * newWidth + x) * image.numberOfColorChannels + c] = static_cast<unsigned char>(sum[c] / samples);
+        
+            for (std::size_t c = 0; c < image.numberOfColorChannels; ++c) {
+                scaledData[(y * newWidth + x) * image.numberOfColorChannels + c] =
+                    static_cast<unsigned char>(sum[c] / samples);
             }
         }
     }
@@ -45,7 +57,7 @@ Image AveragingScaler::ScaleImageTo(const Image &image, int newWidth, int newHei
 };
 
 Image AveragingScaler::ScaleImageTo(const Image &image, float scale){
-    int newWidth = static_cast<int>(static_cast<float>(image.width) * scale);
-    int newHeight = static_cast<int>(static_cast<float>(image.height) * scale);
+    std::size_t newWidth = static_cast<std::size_t>(static_cast<float>(image.width) * scale);
+    std::size_t newHeight = static_cast<std::size_t>(static_cast<float>(image.height) * scale);
     return ScaleImageTo(image, newWidth, newHeight);
 }
