@@ -7,7 +7,7 @@
 bool testGrayScale(Image& img){
     for(std::size_t y = 0; y < img.height; ++y){
         for(std::size_t x = 0; x < img.width; ++x){
-            unsigned char* pixel = &img.data[(x + y * img.width) * img.numberOfColorChannels];
+            double* pixel = &img.data[(x + y * img.width) * img.numberOfColorChannels];
             auto r = pixel[0]; // red component
             auto g = pixel[1]; // green component
             auto b = pixel[2]; // blue component

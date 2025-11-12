@@ -9,7 +9,7 @@ void InitImage(Image &img, size_t width, size_t height, size_t nocc){
     img.width = width;
     img.height = height;
     img.numberOfColorChannels = nocc;
-    unsigned char *data = new unsigned char[width * height * nocc];
+    double *data = new double[width * height * nocc];
     REQUIRE(data != nullptr);
     img.data = data;
 
