@@ -4,7 +4,7 @@
 
 Image AveragingScaler::ScaleImageTo(const Image &image, std::size_t newWidth, std::size_t newHeight){
     // allocate big enough memory
-    unsigned char *scaledData = new unsigned char[newWidth * newHeight * image.numberOfColorChannels];
+    double *scaledData = new double[newWidth * newHeight * image.numberOfColorChannels];
 
     Image scaledImage;
     scaledImage.width = newWidth;
@@ -37,7 +37,7 @@ Image AveragingScaler::ScaleImageTo(const Image &image, std::size_t newWidth, st
         
             for (std::size_t sy = y0; sy < y1 && sy < image.height; ++sy) {
                 for (std::size_t sx = x0; sx < x1 && sx < image.width; ++sx) {
-                    const unsigned char* p = getPixel(sx, sy);
+                    const double* p = getPixel(sx, sy);
                     for (std::size_t c = 0; c < image.numberOfColorChannels; ++c) {
                         sum[c] += p[c];
                     }
@@ -47,7 +47,7 @@ Image AveragingScaler::ScaleImageTo(const Image &image, std::size_t newWidth, st
         
             for (std::size_t c = 0; c < image.numberOfColorChannels; ++c) {
                 scaledData[(y * newWidth + x) * image.numberOfColorChannels + c] =
-                    static_cast<unsigned char>(sum[c] / samples);
+                    static_cast<double>(sum[c] / samples);
             }
         }
     }

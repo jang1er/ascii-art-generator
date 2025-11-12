@@ -6,7 +6,7 @@
 class Image{
     public:
     /// @brief 
-    unsigned char *data;
+    double *data;
     /// @brief 
     std::size_t width;
     /// @brief 
@@ -33,7 +33,7 @@ class Image{
     {
         if (other.data){
             std::size_t size = width * height * numberOfColorChannels;
-            data = new unsigned char[size];
+            data = new double[size];
             std::copy(other.data, other.data + size, data); // copy data
         }
     }
@@ -47,7 +47,7 @@ class Image{
             numberOfColorChannels = other.numberOfColorChannels;
             if(other.data){
                 std::size_t size = width * height * numberOfColorChannels;
-                data = new unsigned char[size];
+                data = new double[size];
                 std::copy(other.data, other.data + size, data);
             } else {
                 data = nullptr;
@@ -58,7 +58,7 @@ class Image{
 
     // Move Constructor
     Image(Image&& other) noexcept
-        : width(other.width), height(other.height), numberOfColorChannels(other.numberOfColorChannels), data(other.data)
+        : data(other.data), width(other.width), height(other.height), numberOfColorChannels(other.numberOfColorChannels)
     {
         other.data = nullptr;
         other.width = other.height = other.numberOfColorChannels = 0;
