@@ -27,9 +27,13 @@ struct GeneratorContext{
     EdgeDetectionMode detectionMode;
 };
 
+static const std::string defaultPixels = " .-=+*x#$&X@";
+static const std::string granularPixels = " .:-=+*#%@&$WX8";
+static const std::string roughPixels = " .'=-*#%@";
+
 class AsciiGenerator{
     public:
     virtual ~AsciiGenerator() = default;
 
-    virtual std::string GenerateAscii(Image &image, GeneratorContext context) = 0;
+    virtual std::string GenerateAscii(Image &image, GeneratorContext context, const std::string &pixels = defaultPixels)= 0;
 };
