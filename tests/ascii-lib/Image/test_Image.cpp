@@ -1,6 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
 #include "common/Image/Image.hpp"
-#include "vendor/stb-image/stb_image_write.h"
 
 #include <iostream>
 
@@ -74,9 +73,8 @@ TEST_CASE("Grayscaling image kingfisher", "[image]"){
     REQUIRE(testGrayScale(gray));
 
     // write to file
-    if(!stbi_write_png("test-images/output-kingfisher-gray.png", gray.width, gray.height, gray.numberOfColorChannels, gray.data, gray.width * gray.numberOfColorChannels)){
-        std::cout << "TEST:: Failed to write image to file" << std::endl;
-    }
+    gray.WriteToFile("test-images/", "output-kingfisher-gray.png");
+
 }
 
 TEST_CASE("Grayscaling image donut 1", "[image]"){
@@ -98,9 +96,7 @@ TEST_CASE("Grayscaling image donut 1", "[image]"){
     REQUIRE(testGrayScale(gray));
 
     // write to file
-    if(!stbi_write_png("test-images/output-donut-gray.png", gray.width, gray.height, gray.numberOfColorChannels, gray.data, gray.width * gray.numberOfColorChannels)){
-        std::cout << "TEST:: Failed to write image to file" << std::endl;
-    }
+    gray.WriteToFile("test-images/", "output-donut-1-gray.png");
 }
 
 TEST_CASE("Grayscaling image donut 2", "[image]"){
@@ -122,7 +118,5 @@ TEST_CASE("Grayscaling image donut 2", "[image]"){
     REQUIRE(testGrayScale(gray));
 
     // write to file
-    if(!stbi_write_png("test-images/output-donut-2-gray.png", gray.width, gray.height, gray.numberOfColorChannels, gray.data, gray.width * gray.numberOfColorChannels)){
-        std::cout << "TEST:: Failed to write image to file" << std::endl;
-    }
+    gray.WriteToFile("test-images/", "output-donut-2-gray.png");
 }

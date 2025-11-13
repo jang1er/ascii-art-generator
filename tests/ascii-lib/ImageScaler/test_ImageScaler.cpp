@@ -1,7 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include "common/Image/Image.hpp"
 #include "common/Image/Scaling/AveragingImageScaler.hpp"
-#include "vendor/stb-image/stb_image_write.h"
 
 #include <iostream>
 
@@ -209,7 +208,5 @@ TEST_CASE("Scaling image donut 1", "[imageScaler]"){
     REQUIRE(scaled.data != img.data);
 
     // write to file
-    if(!stbi_write_png("test-images/output-donut-scaled.png", scaled.width, scaled.height, scaled.numberOfColorChannels, scaled.data, scaled.width * scaled.numberOfColorChannels)){
-        std::cout << "TEST:: Failed to write image to file" << std::endl;
-    }
+    scaled.WriteToFile("test-images/", "output-donut-scaled.png");
 }
