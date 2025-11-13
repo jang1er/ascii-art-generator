@@ -1,8 +1,12 @@
 #include "common/Image/Image.hpp"
-#include "vendor/stb-image/stb_image.h"
+
 
 #include <string>
 #include <iostream>
+
+std::size_t Image::size() const{
+    return width * height * numberOfColorChannels;
+}
 
 Image::Image() 
     : data(nullptr), width(0), height(0), numberOfColorChannels(0) 
@@ -23,7 +27,7 @@ Image::Image(std::string path){
     numberOfColorChannels = 3;
     
     // convert to double
-    data = new double[width * height * numberOfColorChannels];
+    data = new double[size()];
     if(!data){
         std::cout << "Image::ERROR: Image loading failed for " << path << " due to insufficient memory" << std::endl;
         Free();
@@ -31,7 +35,7 @@ Image::Image(std::string path){
     }
 
     // copy data
-    for(std::size_t i = 0; i < width * height * numberOfColorChannels; ++i){
+    for(std::size_t i = 0; i < size(); ++i){
         data[i] = static_cast<double>(image_data[i]) / 255; // map colors to range of 0 to 1
     }
 
@@ -51,6 +55,8 @@ Image::~Image(){
     Free();
 }
 
+
+
 Image Image::ToGrayScale() const{
     if(!data || numberOfColorChannels < 3) {
         std::cerr << "Cannot grayscale: image has less than 3 channels or data is null\n";
@@ -63,7 +69,7 @@ Image Image::ToGrayScale() const{
     grayImage.numberOfColorChannels = numberOfColorChannels;
 
     // Allocate memory for new image
-    grayImage.data = new double[width * height * numberOfColorChannels];
+    grayImage.data = new double[size()];
     if(!grayImage.data) {
         std::cerr << "Failed to allocate memory for grayscale image\n";
         return Image();
@@ -91,4 +97,26 @@ Image Image::ToGrayScale() const{
     }
 
     return grayImage;
+}
+
+
+void Image::WriteToFile(const std::string &path, const std::string &fileName) const{
+    // alloc buffer
+    auto buffer = new unsigned char[size()];
+
+    if(!buffer){
+        std::cout << "IMAGE::ERROR could not write image to file due to insufficient memory" << std::endl;
+        delete[] buffer;
+        return;
+    }
+
+    // convert back to normal rgb format
+    for(std::size_t i = 0; i < size(); ++i){
+        buffer[i] = static_cast<unsigned char>(data[i] * 255);
+    }
+
+    if(!stbi_write_png((path + fileName).c_str(),width, height, numberOfColorChannels,buffer, width * numberOfColorChannels)){
+        std::cout << "TEST:: Failed to write image to file" << std::endl;
+    }
+    delete[] buffer;
 }

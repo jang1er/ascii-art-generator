@@ -3,6 +3,9 @@
 #include <string>
 #include <cstddef>
 
+#include "vendor/stb-image/stb_image.h"
+#include "vendor/stb-image/stb_image_write.h"
+
 class Image{
     public:
     /// @brief 
@@ -14,16 +17,28 @@ class Image{
     /// @brief 
     std::size_t numberOfColorChannels;
 
+    /// @brief 
     Image();
+
+    /// @brief 
+    /// @param path 
     Image(std::string path);
 
+    /// @brief 
     ~Image();
 
+    /// @brief 
     void Free();
+
+    std::size_t size() const;
 
     /// @brief Grayscales an image by averaging rgba channels
     /// @param image Image to grayscale
     Image ToGrayScale() const;
+
+    /// @brief 
+    /// @param path 
+    void WriteToFile(const std::string &path, const std::string &fileName) const;
 
     // Move Semantics Functions
 
