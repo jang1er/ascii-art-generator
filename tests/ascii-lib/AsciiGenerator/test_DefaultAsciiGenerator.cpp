@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
-#include "common/Image/Image.hpp"
-#include "common/Image/Scaling/AveragingImageScaler.hpp"
-#include "common/Ascii/Default_AsciiGenerator.hpp"
+#include "ascii/Image/Image.hpp"
+#include "ascii/Image/Scaling/AveragingImageScaler.hpp"
+#include "ascii/Ascii/Default_AsciiGenerator.hpp"
 
 #include <iostream>
 

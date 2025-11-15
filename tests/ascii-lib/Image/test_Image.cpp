@@ -1,5 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
-#include "common/Image/Image.hpp"
+#include "ascii/Image/Image.hpp"
 
 #include <iostream>
 
