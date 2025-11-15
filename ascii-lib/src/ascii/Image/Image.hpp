@@ -30,7 +30,13 @@ class Image{
     /// @brief 
     void Free();
 
+    /// @brief 
+    /// @return 
     std::size_t size() const;
+
+    /// @brief 
+    /// @return 
+    bool isEmpty() const;
 
     /// @brief Grayscales an image by averaging rgba channels
     /// @param image Image to grayscale
@@ -40,7 +46,34 @@ class Image{
     /// @param path 
     void WriteToFile(const std::string &path, const std::string &fileName) const;
 
-    // Move Semantics Functions
+    /*################ OPERATOR OVERLOADS ####################### */
+
+    double& operator[] (std::size_t index){
+        return data[index];
+    }
+
+    double& operator[] (std::size_t index) const{
+        return data[index];
+    }
+
+    double& operator() (std::size_t x, std::size_t y){
+        return data[(x + y * width) * numberOfColorChannels];
+    }
+
+    double& operator() (std::size_t x, std::size_t y) const{
+        return data[(x + y * width) * numberOfColorChannels];
+    }
+
+    double& operator() (std::size_t x, std::size_t y, std::size_t c){
+        return data[(x + y * width) * numberOfColorChannels + c];
+    }
+
+    double& operator() (std::size_t x, std::size_t y, std::size_t c) const{
+        return data[(x + y * width) * numberOfColorChannels + c];
+    }
+
+
+    /*################ MOVE SEMANTICS ####################### */
 
     // Copy Constructor (deep copy)
     Image(const Image& other)

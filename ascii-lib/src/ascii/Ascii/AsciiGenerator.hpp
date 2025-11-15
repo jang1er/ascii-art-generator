@@ -1,8 +1,8 @@
 #pragma once
 
-#include "common/Image/Image.hpp"
-#include "common/Image/Scaling/AveragingImageScaler.hpp"
-#include "common/Image/Color.hpp"
+#include "ascii/Image/Image.hpp"
+#include "ascii/Image/Scaling/AveragingImageScaler.hpp"
+#include "ascii/Image/Color.hpp"
 
 #include <string>
 

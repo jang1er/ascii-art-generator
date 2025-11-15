@@ -1,4 +1,4 @@
-#include "common/Image/Image.hpp"
+#include "ascii/Image/Image.hpp"
 
 
 #include <string>
@@ -6,6 +6,10 @@
 
 std::size_t Image::size() const{
     return width * height * numberOfColorChannels;
+}
+
+bool Image::isEmpty() const {
+    return !data || !width || !height || !numberOfColorChannels; // if any are zero, this image is empty
 }
 
 Image::Image() 
